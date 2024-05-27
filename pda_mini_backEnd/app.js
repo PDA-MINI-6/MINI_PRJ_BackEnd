@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 const PopUpStoreRouter = require("./routes/popupStore");
 
@@ -18,6 +19,13 @@ mongoose
   })
   .then(() => console.log("connection successfully established"))
   .catch((err) => console.log(err));
+
+let corsOptions = {
+  origin: "*", // 출처 허용 옵션
+  credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+};
+
+app.use(cors(corsOptions));
 
 app.use(logger("dev"));
 app.use(express.json());
