@@ -20,19 +20,33 @@ router.get("/:Id", (req, res, next) => {
 });
 
 router.patch("/:Id/like", (req, res, next) => {
-  PopupStore.updateOne({ id: req.params.Id }, { $inc: { liked: 1 } }).then(
-    (result) => {
-      res.send(result);
-    }
-  );
+  PopupStore.findOneAndUpdate(
+    { id: req.params.Id },
+    { $inc: { liked: 1 } },
+    { new: true } // 이 옵션은 업데이트 후의 문서를 반환하도록 합니다.
+  )
+    .then((updatedPopupStore) => {
+      if (!updatedPopupStore) {
+        return res.status(404).send({ message: "PopupStore not found" });
+      }
+      res.send({ liked: updatedPopupStore.liked });
+    })
+    .catch();
 });
 
-router.patch("/:Id/unlike", (req, res, next) => {
-  PopupStore.updateOne({ id: req.params.Id }, { $inc: { liked: -1 } }).then(
-    (result) => {
-      res.send(result);
-    }
-  );
+router.patch("/:Id/unLike", (req, res, next) => {
+  PopupStore.findOneAndUpdate(
+    { id: req.params.Id },
+    { $inc: { liked: -1 } },
+    { new: true } // 이 옵션은 업데이트 후의 문서를 반환하도록 합니다.
+  )
+    .then((updatedPopupStore) => {
+      if (!updatedPopupStore) {
+        return res.status(404).send({ message: "PopupStore not found" });
+      }
+      res.send({ liked: updatedPopupStore.liked });
+    })
+    .catch();
 });
 
 module.exports = router;
