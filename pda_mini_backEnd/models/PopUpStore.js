@@ -31,7 +31,7 @@ const PopupStoreSchema = new mongoose.Schema({
   },
 
   startDate: {
-    type: Date,
+    type: String,
     required: true,
   },
 
