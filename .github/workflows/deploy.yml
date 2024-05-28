@@ -1,8 +1,8 @@
 name: deploy
 
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
 
   workflow_dispatch:
 
@@ -24,30 +24,8 @@ jobs:
         with:
           node-version: "20.12.2"
 
-      - name: build server files
-        working-directory: ./pda_mini_backEnd
-        run: |
-          yarn
-          yarn run build
-
-      ###################################### 추가된 부분 ######################################
-
       - name: zip file
         run: zip -r pda_mini_back.zip ./dist ./scripts ./appspec.yml ./.env ./package.json
 
-      - name: AWS configure credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-
-      - name: upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./pda_mini_back.zip s3://pda-mini-backend-build/deploy/
-
-      - name: deploy with AWS codeDeploy
-        run: aws deploy create-deployment
-          --application-name pda_mini_backEnd
-          --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name backend_group1
-          --s3-location bucket=pda-mini-backend-build,bundleType=zip,key=deploy/pda_mini_back.zip
+      - name: upload to ec2 instance
+        run:
