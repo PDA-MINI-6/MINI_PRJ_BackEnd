@@ -49,16 +49,6 @@ router.patch("/:Id/unLike", (req, res, next) => {
     .catch();
 });
 
-router.get("/:Id/comments", (req, res, next) => {
-  const { Id } = req.params;
-
-  Comment.find({ PopupStore: Id })
-    .then((comments) => {
-      res.send(comments);
-    })
-    .catch(next);
-});
-
 router.post("/:Id/comment", (req, res, next) => {
   const { Id } = req.params;
   const { author, content } = req.body;
@@ -70,7 +60,12 @@ router.post("/:Id/comment", (req, res, next) => {
   });
 
   newComment.save()
-    .then((comment) => res.status(201).send(comment))
+    .then((comment) => {
+      return Comment.find({ PopupStore: Id });
+    })
+    .then((comments) => {
+      res.status(201).send(comments);
+    })
     .catch(next);
 });
 
@@ -82,10 +77,13 @@ router.delete("/:Id/comment/:commentId", (req, res, next) => {
       if (!deletedComment) {
         return res.status(404).send({ message: "Comment not found or does not belong to this PopupStore" });
       }
-      res.send({ message: "Comment deleted successfully" });
+
+      return Comment.find({ PopupStore: Id });
+    })
+    .then((comments) => {
+      res.send({ message: "Comment deleted successfully", comments });
     })
     .catch(next);
 });
-
 
 module.exports = router;
