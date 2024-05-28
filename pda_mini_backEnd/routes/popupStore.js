@@ -49,6 +49,16 @@ router.patch("/:Id/unLike", (req, res, next) => {
     .catch();
 });
 
+router.get("/:Id/comments", (req, res, next) => {
+  const { Id } = req.params;
+
+  Comment.find({ PopupStore: Id })
+    .then((comments) => {
+      res.send(comments);
+    })
+    .catch(next);
+});
+
 router.post("/:Id/comment", (req, res, next) => {
   const { Id } = req.params;
   const { author, content } = req.body;
