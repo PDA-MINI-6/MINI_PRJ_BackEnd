@@ -14,7 +14,7 @@ const LocationSchema = new mongoose.Schema(
   { _id: false }
 );
 
-const PopupStoreSchema = new mongoose.Schema({
+const PlaceSchema = new mongoose.Schema({
   id: {
     type: Number,
     required: true,
@@ -68,12 +68,12 @@ const PopupStoreSchema = new mongoose.Schema({
   },
 });
 
-PopupStoreSchema.virtual("Comments", {
+PlaceSchema.virtual("Comments", {
   ref: "Comment",
   localField: "id",
   foreignField: "PopupStore",
 });
-PopupStoreSchema.set("toObject", { virtuals: true });
-PopupStoreSchema.set("toJSON", { virtuals: true });
-const PopupStore = mongoose.model("PopupStore", PopupStoreSchema);
-module.exports = PopupStore;
+PlaceSchema.set("toObject", { virtuals: true });
+PlaceSchema.set("toJSON", { virtuals: true });
+const Place = mongoose.model("Place", PlaceSchema);
+module.exports = Place;
