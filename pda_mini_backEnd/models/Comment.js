@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const CommentSchema = new mongoose.Schema({
+  password: {
+    type: String,
+    required: true,
+  },
   author: {
     type: String,
     required: true,
